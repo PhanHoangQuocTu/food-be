@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { SignInDto } from '../../auth/dto/sign-in.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto extends SignInDto {
+export class SignUpDto extends SignInDto {
     @ApiProperty({
         example: 'Phan Hoang Quoc Tu',
     })
