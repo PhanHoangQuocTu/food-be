@@ -7,10 +7,19 @@ export class UserEntity {
     id: number;
 
     @Column()
-    name: string;
+    firstName: string;
+
+    @Column()
+    lastName: string;
 
     @Column({ unique: true })
     email: string;
+
+    @Column({ unique: true })
+    phoneNumber: string;
+
+    @Column()
+    address: string;
 
     @Column({ select: false })
     password: string;
