@@ -66,10 +66,10 @@ export class UsersService {
   // }
 
   async findUserByEmail(email: string): Promise<UserEntity> {
-    return await this.usersRepository.findOneBy({ email });
+    return await this.usersRepository.findOne({ where: { email } });
   }
 
   async accessToken(user: UserEntity): Promise<string> {
-    return sign({id: user.id, email: user.email}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+    return sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
   }
 }
