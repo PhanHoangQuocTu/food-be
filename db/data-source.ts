@@ -4,11 +4,11 @@ import { config } from 'dotenv'
 config()
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
-    username: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'pgadmin123@',
-    database: process.env.DB_NAME || 'food-be',
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     synchronize: false,
     logging: false,
     entities: ['dist/**/*.entity{.ts,.js}'],
