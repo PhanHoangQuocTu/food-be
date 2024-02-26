@@ -10,7 +10,7 @@ import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
 import { AuthenticationGuard } from 'src/utils/guards/authentication.guard';
 import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
-import { AuthorizeRoles } from 'src/utils/decorators/authorize-roles.decorator';
+// import { AuthorizeRoles } from 'src/utils/decorators/authorize-roles.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -24,8 +24,8 @@ export class UsersController {
   }
 
   @ApiBearerAuth('access-token')
-  @AuthorizeRoles(Roles.ADMIN)
-  @UseGuards(AuthenticationGuard, AuthorizeGuard)
+  // @AuthorizeRoles(Roles.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get()
   async findAll(): Promise<UserEntity[]> {
     return await this.usersService.findAll();
