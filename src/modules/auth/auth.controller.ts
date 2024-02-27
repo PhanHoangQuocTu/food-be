@@ -4,8 +4,9 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { UserEntity } from 'src/entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateAdminAccountDto } from './dto/create-admin-account';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -20,5 +21,10 @@ export class AuthController {
     const user = await this.authService.signIn(signInDto)
     const accessToken = await this.authService.accessToken(user)
     return { accessToken, user }
+  }
+
+  @Post('create-admin-account')
+  async createAdminAccount(@Body() createAdminAccountDto: CreateAdminAccountDto): Promise<{ user: UserEntity }> {
+    return { user: await this.authService.createAdminAccount(createAdminAccountDto) }
   }
 }

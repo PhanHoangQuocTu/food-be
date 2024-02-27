@@ -12,19 +12,18 @@ import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
 // import { AuthorizeRoles } from 'src/utils/decorators/authorize-roles.decorator';
 
-@ApiTags('user')
+@ApiTags('User')
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard)
   @Get('me')
   me(@CurrentUser() currentUser: UserEntity) {
     return currentUser
   }
 
-  @ApiBearerAuth('access-token')
-  // @AuthorizeRoles(Roles.ADMIN)
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get()
   async findAll(): Promise<UserEntity[]> {

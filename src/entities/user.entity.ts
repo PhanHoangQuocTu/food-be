@@ -2,6 +2,7 @@ import { Roles } from "src/utils/common/user-roles.enum";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 import { CategoryEntity } from "./category.entity";
 import { ProductEntity } from "./product.entity";
+import { ReviewEntity } from "./review.entity";
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -40,4 +41,7 @@ export class UserEntity {
 
     @OneToMany(() => ProductEntity, (product) => product.addedBy)
     products: ProductEntity[]
+
+    @OneToMany(() => ReviewEntity, (review) => review.user)
+    reviews: ReviewEntity[]
 }

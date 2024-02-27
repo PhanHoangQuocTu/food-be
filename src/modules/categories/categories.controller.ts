@@ -10,33 +10,33 @@ import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
 import { CategoryEntity } from 'src/entities/category.entity';
 
-@ApiTags('category')
+@ApiTags('Category')
 @Controller('category')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) { }
 
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto, @CurrentUser() currentUser: UserEntity): Promise<CategoryEntity> {
     return await this.categoriesService.create(createCategoryDto, currentUser);
   }
 
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get()
   async findAll(): Promise<CategoryEntity[]> {
     return await this.categoriesService.findAll();
   }
 
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CategoryEntity> {
     return await this.categoriesService.findOne(+id);
   }
 
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {

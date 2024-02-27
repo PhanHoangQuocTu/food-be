@@ -6,6 +6,8 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { sign } from 'jsonwebtoken';
 import { hash, compare } from 'bcrypt'
 import { SignInDto } from './dto/sign-in.dto';
+import { CreateAdminAccountDto } from './dto/create-admin-account';
+import { Roles } from 'src/utils/common/user-roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -17,12 +19,16 @@ export class AuthService {
   async signUp(signUpDto: SignUpDto): Promise<UserEntity> {
     const userExists = await this.findUserByEmail(signUpDto.email);
 
-    // check if user exists
-    if (userExists) throw new BadRequestException('User already exists');
+    const phoneNumberExists = await this.findUserByPhoneNumber(signUpDto.phoneNumber)
+    
+    if (userExists ) throw new BadRequestException('User already exists');
 
-    // hash password, create user and save, delete password, return user
+    if (phoneNumberExists) throw new BadRequestException('Phone number already exists');
+
     signUpDto.password = await hash(signUpDto.password, 10)
+    
     const user = this.usersRepository.create(signUpDto);
+    
     await this.usersRepository.save(user);
 
     delete user.password;
@@ -36,7 +42,6 @@ export class AuthService {
       .where('users.email = :email', { email: signInDto.email })
       .getOne();
 
-    // check if user exists
     if (!userExists) throw new BadRequestException('User does not exist');
 
     const matchPassword = await compare(signInDto.password, userExists.password);
@@ -48,8 +53,32 @@ export class AuthService {
     return userExists
   }
 
+  async createAdminAccount(createAdminAccountDto: CreateAdminAccountDto): Promise<UserEntity> {
+    if(createAdminAccountDto.verificationCode !== process.env.VERIFICATION_CODE) throw new BadRequestException('Wrong verification code');
+
+    const userExists = await this.findUserByEmail(createAdminAccountDto.email);
+
+    if (userExists) throw new BadRequestException('User already exists');
+
+    createAdminAccountDto.password = await hash(createAdminAccountDto.password, 10)
+    
+    const user = this.usersRepository.create(createAdminAccountDto);
+    
+    user.roles = [Roles.ADMIN, Roles.USER];
+
+    await this.usersRepository.save(user);
+
+    delete user.password;
+
+    return user;
+  }
+
   async findUserByEmail(email: string): Promise<UserEntity> {
     return await this.usersRepository.findOne({ where: { email } });
+  }
+
+  async findUserByPhoneNumber(phoneNumber: string): Promise<UserEntity> {
+    return await this.usersRepository.findOne({ where: { phoneNumber } });
   }
 
   async accessToken(user: UserEntity): Promise<string> {
