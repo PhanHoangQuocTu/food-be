@@ -9,6 +9,7 @@ import { Roles } from 'src/utils/common/user-roles.enum';
 import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
 import { UserEntity } from 'src/entities/user.entity';
 import { ProductEntity } from 'src/entities/product.entity';
+import { IStatusResponse } from 'src/utils/common';
 
 @ApiTags('Product')
 @Controller('products')
@@ -22,15 +23,11 @@ export class ProductsController {
     return await this.productsService.create(createProductDto, currentUser);
   }
 
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get()
   async findAll(): Promise<ProductEntity[]> {
     return await this.productsService.findAll();
   }
 
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<ProductEntity> {
     return await this.productsService.findOne(+id);
@@ -43,8 +40,10 @@ export class ProductsController {
     return await this.productsService.update(+id, updateProductDto, currentUser);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  async remove(@Param('id') id: string): Promise<IStatusResponse> {
+    return await this.productsService.remove(+id);
   }
 }

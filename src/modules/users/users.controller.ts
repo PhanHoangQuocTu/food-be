@@ -10,12 +10,14 @@ import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
 import { AuthenticationGuard } from 'src/utils/guards/authentication.guard';
 import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
+import { IStatusResponse } from 'src/utils/common';
 // import { AuthorizeRoles } from 'src/utils/decorators/authorize-roles.decorator';
 
 @ApiTags('User')
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
+
   @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthenticationGuard)
   @Get('me')
@@ -35,15 +37,17 @@ export class UsersController {
     return await this.usersService.findOne(+id);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(AuthenticationGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    return await this.usersService.update(+id, updateUserDto);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string): Promise<IStatusResponse> {
+    return await this.usersService.remove(+id);
   }
-
-
 }

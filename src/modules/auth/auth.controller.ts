@@ -19,7 +19,9 @@ export class AuthController {
   @Post('sign-in')
   async signIn(@Body() signInDto: SignInDto): Promise<{ user: UserEntity, accessToken: string }> {
     const user = await this.authService.signIn(signInDto)
+
     const accessToken = await this.authService.accessToken(user)
+
     return { accessToken, user }
   }
 

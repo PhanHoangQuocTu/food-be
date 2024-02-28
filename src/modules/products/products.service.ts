@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from 'src/entities/product.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/entities/user.entity';
+import { IStatusResponse } from 'src/utils/common';
 
 @Injectable()
 export class ProductsService {
@@ -77,7 +78,14 @@ export class ProductsService {
     return await this.productsRepository.save(product);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number): Promise<IStatusResponse> {
+    const product = await this.findOne(id);
+
+    await this.productsRepository.remove(product);
+
+    return {
+      status: 200,
+      message: 'Product deleted successfully',
+    };
   }
 }

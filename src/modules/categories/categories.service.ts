@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from 'src/entities/category.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/entities/user.entity';
+import { IStatusResponse } from 'src/utils/common';
 
 @Injectable()
 export class CategoriesService {
@@ -57,7 +58,14 @@ export class CategoriesService {
     return await this.categoriesRepository.save(category);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number): Promise<IStatusResponse> {
+    const category = await this.findOne(id);
+
+    await this.categoriesRepository.remove(category);
+
+    return {
+      status: 200,
+      message: 'Category deleted successfully',
+    }
   }
 }

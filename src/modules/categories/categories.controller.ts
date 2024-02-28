@@ -9,6 +9,7 @@ import { AuthenticationGuard } from 'src/utils/guards/authentication.guard';
 import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
 import { CategoryEntity } from 'src/entities/category.entity';
+import { IStatusResponse } from 'src/utils/common';
 
 @ApiTags('Category')
 @Controller('category')
@@ -22,15 +23,11 @@ export class CategoriesController {
     return await this.categoriesService.create(createCategoryDto, currentUser);
   }
 
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get()
   async findAll(): Promise<CategoryEntity[]> {
     return await this.categoriesService.findAll();
   }
 
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CategoryEntity> {
     return await this.categoriesService.findOne(+id);
@@ -43,8 +40,10 @@ export class CategoriesController {
     return await this.categoriesService.update(+id, updateCategoryDto);
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoriesService.remove(+id);
+  async remove(@Param('id') id: string): Promise<IStatusResponse> {
+    return await this.categoriesService.remove(+id);
   }
 }
