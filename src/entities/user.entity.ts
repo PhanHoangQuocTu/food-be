@@ -3,6 +3,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Ti
 import { CategoryEntity } from "./category.entity";
 import { ProductEntity } from "./product.entity";
 import { ReviewEntity } from "./review.entity";
+import { OrderEntity } from "./order.entity";
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -44,4 +45,10 @@ export class UserEntity {
 
     @OneToMany(() => ReviewEntity, (review) => review.user)
     reviews: ReviewEntity[]
+
+    @OneToMany(() => OrderEntity, (order) => order.updatedBy)
+    ordersUpdateBy: OrderEntity[]
+
+    @OneToMany(() => OrderEntity, (order) => order.user)
+    orders: OrderEntity[]
 }

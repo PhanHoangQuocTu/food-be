@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { OrdersModule } from './modules/orders/orders.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
@@ -14,7 +15,8 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     UsersModule,
     CategoriesModule,
     ProductsModule,
-    ReviewsModule
+    ReviewsModule,
+    OrdersModule
   ],
   controllers: [],
   providers: [],

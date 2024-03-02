@@ -9,14 +9,12 @@ import { UserEntity } from 'src/entities/user.entity';
 import { ReviewEntity } from 'src/entities/review.entity';
 import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
-import { InjectRepository } from '@nestjs/typeorm';
 import { IStatusResponse } from 'src/utils/common';
 
 @ApiTags('Review')
 @Controller('reviews')
 export class ReviewsController {
   constructor(
-    @InjectRepository(ReviewEntity)
     private readonly reviewsService: ReviewsService,
   ) { }
 

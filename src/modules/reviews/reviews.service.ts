@@ -37,11 +37,10 @@ export class ReviewsService {
   }
 
   async findAll(): Promise<ReviewEntity[]> {
-    return await this.reviewsRepository.find({ relations: { user: true, product: { category: true } } })
+    return await this.reviewsRepository.find()
   }
 
   async findAllByProduct(productId: number): Promise<ReviewEntity[]> {
-
     return await this.reviewsRepository.find({ where: { product: { id: productId } }, relations: { user: true, product: { category: true } } })
   }
 

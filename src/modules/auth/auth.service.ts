@@ -58,7 +58,11 @@ export class AuthService {
 
     const userExists = await this.findUserByEmail(createAdminAccountDto.email);
 
+    const phoneNumberExists = await this.findUserByPhoneNumber(createAdminAccountDto.phoneNumber)
+
     if (userExists) throw new BadRequestException('User already exists');
+
+    if (phoneNumberExists) throw new BadRequestException('Phone number already exists');
 
     createAdminAccountDto.password = await hash(createAdminAccountDto.password, 10)
     
