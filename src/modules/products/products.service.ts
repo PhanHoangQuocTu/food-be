@@ -7,6 +7,7 @@ import { ProductEntity } from 'src/entities/product.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/entities/user.entity';
 import { IStatusResponse } from 'src/utils/common';
+import { OrderStatus } from 'src/utils/common/order-status.enum';
 
 @Injectable()
 export class ProductsService {
@@ -87,5 +88,19 @@ export class ProductsService {
       status: 200,
       message: 'Product deleted successfully',
     };
+  }
+
+  async updateStock(id: number, stock: number, status: string): Promise<ProductEntity> {
+    let product = await this.findOne(id);
+
+    if (status === OrderStatus.DELIVERED) {
+      product.stock -= stock;
+    } else {
+      product.stock += stock;
+    }
+
+    product = await this.productsRepository.save(product);
+
+    return product
   }
 }
