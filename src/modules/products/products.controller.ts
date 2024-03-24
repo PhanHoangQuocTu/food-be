@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } f
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthenticationGuard } from 'src/utils/guards/authentication.guard';
 import { AuthorizeGuard } from 'src/utils/guards/authorization.guard';
 import { Roles } from 'src/utils/common/user-roles.enum';
@@ -28,9 +28,17 @@ export class ProductsController {
 
   @SerializeIncludes(ProductsDto)
   @Get()
+  @ApiQuery({ name: 'limit', type: Number, required: false },)
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'search', type: String, required: false })
+  @ApiQuery({ name: 'categoryId', type: Number, required: false })
+  @ApiQuery({ name: 'minPrice', type: Number, required: false })
+  @ApiQuery({ name: 'maxPrice', type: Number, required: false })
+  @ApiQuery({ name: 'minRating', type: Number, required: false })
+  @ApiQuery({ name: 'maxRating', type: Number, required: false })
   async findAll(
     @Query() query: FindAllProductsParamsDto,
-  ): Promise<{ products: any[], meta: { limit: number, totalProducts: number } }> {
+  ): Promise<{ products: any[], meta: { limit: number, totalProducts: number, totalPage: number, currentPage: number } }> {
     return await this.productsService.findAll(query);
   }
 

@@ -1,4 +1,4 @@
-export class FindAllProductsParamsDto {
+export type FindAllProductsParamsDto = {
     search: string;
 
     categoryId: number;

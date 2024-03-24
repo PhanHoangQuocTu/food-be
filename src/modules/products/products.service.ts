@@ -32,15 +32,10 @@ export class ProductsService {
     return await this.productsRepository.save(product);
   }
 
-  async findAll(query: FindAllProductsParamsDto): Promise<{ products: any[], meta: { limit: number, totalProducts: number } }> {
-    // let filteredTotalProducts: number;
-    let limit: number;
+  async findAll(query: FindAllProductsParamsDto): Promise<{ products: any[], meta: { limit: number, totalProducts: number, totalPage: number, currentPage: number } }> {
+    const limit: number = Number(query.limit) || 999999999;
+    const currentPage: number = Number(query.page) || 1;
 
-    if (!query.limit) {
-      limit = 999999999;
-    } else {
-      limit = query.limit;
-    }
 
     const queryBuilder = dataSource
       .getRepository(ProductEntity)
@@ -52,6 +47,7 @@ export class ProductsService {
       .groupBy('product.id, category.id');
 
     const totalProducts = await queryBuilder.getCount();
+    const totalPage = Math.ceil(totalProducts / limit);
 
     if (query.search) {
       const search = query.search;
@@ -81,12 +77,12 @@ export class ProductsService {
     queryBuilder.limit(limit);
 
     if (query.page) {
-      queryBuilder.offset(query.page);
+      queryBuilder.offset((query.page - 1) * query.limit);
     }
 
     const products = await queryBuilder.getRawMany();
 
-    return { products, meta: { limit, totalProducts } };
+    return { products, meta: { limit, totalProducts, totalPage, currentPage } };
   }
 
 
