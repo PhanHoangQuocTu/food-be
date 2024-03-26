@@ -8,6 +8,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { CartModule } from './modules/cart/cart.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
@@ -16,7 +17,8 @@ import { OrdersModule } from './modules/orders/orders.module';
     CategoriesModule,
     ProductsModule,
     ReviewsModule,
-    OrdersModule
+    OrdersModule,
+    CartModule
   ],
   controllers: [],
   providers: [],
